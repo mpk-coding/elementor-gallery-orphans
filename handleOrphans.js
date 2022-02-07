@@ -10,12 +10,10 @@ const handleOrphans = () => {
   const adjustOrphans = () => {
     const orphan = galleryItems[galleryItems.length - 1];
     const modulo = galleryItems.length % getColumns();
-    const emptyCells = getColumns() - modulo;
+    const emptyCells = modulo === 0 ? 0 : getColumns() - modulo;
     //
     orphan.style["grid-column"] =
-      modulo <= 1 && emptyCells !== 0
-        ? `span ${getColumns()}`
-        : `span ${getColumns() - emptyCells}`;
+      emptyCells !== 0 ? `span ${Math.ceil(getColumns() / modulo)}` : "auto";
     //
   };
   //
@@ -37,4 +35,8 @@ const handleOrphans = () => {
   //
   onResize.observe(root);
   //
+};
+
+window.onload = (event) => {
+  handleOrphans();
 };
