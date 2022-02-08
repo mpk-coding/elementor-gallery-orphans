@@ -1,19 +1,19 @@
 const handleOrphans = () => {
-  const root = document.querySelector(".elementor-gallery__container");
-  const galleryItems = root.querySelectorAll(".e-gallery-item");
+  const gridContainer = document.querySelector(".elementor-gallery__container");
+  const gridCells = gridContainer.querySelectorAll(".e-gallery-item");
   //
   const getColumns = () => {
-    const rootStyle = window.getComputedStyle(root);
-    return parseInt(rootStyle.getPropertyValue("--columns"));
+    const gridContainerStyle = window.getComputedStyle(gridContainer);
+    return parseInt(gridContainerStyle.getPropertyValue("--columns"));
   };
-
+  //
   const adjustOrphans = () => {
-    const orphan = galleryItems[galleryItems.length - 1];
-    const modulo = galleryItems.length % getColumns();
+    const orphan = gridCells[gridCells.length - 1];
+    const modulo = gridCells.length % getColumns();
     const emptyCells = modulo === 0 ? 0 : getColumns() - modulo;
     //
     orphan.style["grid-column"] =
-      emptyCells !== 0 ? `span ${Math.ceil(getColumns() / modulo)}` : "auto";
+      emptyCells !== 0 ? `span ${emptyCells + 1}` : "auto";
     //
   };
   //
@@ -24,19 +24,22 @@ const handleOrphans = () => {
     timer = setTimeout(func, delay);
     //
   };
-
+  //
   const onResize = new ResizeObserver((entries) => {
     debounce(() => {
       for (let entry of entries) {
         adjustOrphans();
+        //
       }
+      //
     }, 100);
+    //
   });
   //
-  onResize.observe(root);
+  onResize.observe(gridContainer);
   //
 };
-
+//
 window.onload = (event) => {
   handleOrphans();
 };
